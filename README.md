@@ -1,5 +1,5 @@
-# LDAP Bridge to connect to Google LDAP
-### Create a google auth secret out of google provided key
+# LDAP Proxy to allow Connectivity to Google Cloud Identity using Client Authentication
+### Create a Google auth secret out of Google provided key
 ```
 oc create secret generic google-auth-cert --from-file=tls.crt=<GOOGLE cert> --from-file=tls.key=<GOOGLE key> --from-file=ca.crt=<GOOGLE cert>
 ```
