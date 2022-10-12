@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ldap-proxy
+spec:
+  selector:
+    matchLabels:
+      app: ldap-proxy
+  replicas: {{ .Values.global.replicas | default "2" }}
+  template:
+    metadata:
+      labels:
+        app: ldap-proxy
+    spec:
+      volumes:
+      - name: tmp
+        emptyDir: {}
+      - name: secrets
+        projected:
+          sources:
+          - secret:
+              name: ldap-proxy-cert
+              items:
+              - path: ldap.local.crt
+                key: tls.crt 
+              - path: ldap.local.key
+                key: tls.key
+          - secret:
+              name: {{ .Values.global.auth }}
+              items:
+              - path: ldap.remote.crt
+                key: tls.crt 
+              - path: ldap.remote.key
+                key: tls.key
+              - path: ldap.remote.ca.cert
+                key: ca.crt
+          - configMap:
+              name: ldap-proxy-conf
+              items:
+              - key: nginx.conf
+                path: nginx.conf
+      serviceAccountName: cp4s-application
+      containers:
+      - name: nginx
+        image: {{ .Values.global.repo }}/{{ .Values.global.image }}:{{ .Values.global.tag }}
+        command:
+        - /usr/sbin/nginx
+        - -c
+        - /etc/nginx/nginx.conf
+        - -g
+        - "daemon off;"
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+        - name: secrets
+          mountPath: /etc/nginx

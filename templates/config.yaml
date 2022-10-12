@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+   name: ldap-proxy-conf
+data:
+  nginx.conf: |- 
+    load_module "/usr/lib64/nginx/modules/ngx_stream_module.so";
+    error_log /dev/stdout debug;
+    pid /tmp/nginx.pid;
+    events {
+        worker_connections 128;
+        accept_mutex off;
+    }
+    stream {
+      upstream backend {
+        server {{ .Values.global.target | default "216.239.32.58" }}:636;
+      }
+      server {
+        listen 1636 ssl;
+        proxy_ssl on;
+        proxy_pass backend;
+        proxy_ssl_name ldap.google.com;
+        proxy_ssl_server_name on;
+        proxy_ssl_certificate         /etc/nginx/ldap.remote.crt;
+        proxy_ssl_certificate_key     /etc/nginx/ldap.remote.key;
+        ssl_certificate         /etc/nginx/ldap.local.crt;
+        ssl_certificate_key     /etc/nginx/ldap.local.key;
+        proxy_ssl_trusted_certificate /etc/nginx/ldap.remote.ca.crt;
+      }
+    }

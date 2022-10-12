@@ -1,0 +1,7 @@
+global:
+  name: "ldap-proxy"
+  auth: "google-auth-secret"
+  repo: "sec-isc-team-isc-icp-docker-local.artifactory.swg-devops.com"
+  image: "cp4s-nginx-stream"
+  tag: "20221010-amd64"
+  replicas: 2
