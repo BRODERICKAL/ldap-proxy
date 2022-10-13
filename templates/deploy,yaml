@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ldap-proxy
+  labels:
+    cp4s-internet: allow
 spec:
   selector:
     matchLabels:
@@ -11,6 +13,7 @@ spec:
     metadata:
       labels:
         app: ldap-proxy
+        cp4s-internet: allow
     spec:
       volumes:
       - name: tmp
