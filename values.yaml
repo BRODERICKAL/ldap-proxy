@@ -1,6 +1,6 @@
 global:
   name: "ldap-proxy"
-  auth: "google-auth-secret"
+  auth: "google-auth-cert"
   repo: "icr.io/ibm-cp-security"
   image: "cp4s-nginx-stream"
   tag: "20221010-amd64"
