@@ -3,6 +3,12 @@
 ```
 oc create secret generic google-auth-cert --from-file=tls.crt=<GOOGLE cert> --from-file=tls.key=<GOOGLE key> --from-file=ca.crt=<GOOGLE cert>
 ```
+### Update a Google auth secret out of Google provided key
+```
+oc delete secret google-auth-cert
+oc create secret generic google-auth-cert --from-file=tls.crt=<GOOGLE cert> --from-file=tls.key=<GOOGLE key> --from-file=ca.crt=<GOOGLE cert>
+oc delete pod -lapp=ldap-proxy
+```
 
 ### app install
 ```
